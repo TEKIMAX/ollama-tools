@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A collection of utility scripts for managing [Ollama](https://ollama.ai/) models on your local machine.
+A collection of utility scripts for managing [Ollama](https://ollama.ai/) models on your local machine. These scripts make it easier for non-technical users to work with Ollama's powerful features.
 
 ## 📦 Tools Included
 
@@ -10,12 +10,20 @@ A collection of utility scripts for managing [Ollama](https://ollama.ai/) models
 
 An interactive script for managing and removing your installed Ollama models.
 
+### 🤖 create_custom_model.sh
+
+Easily create customized assistant models with specific personalities and capabilities.
+
+### 📊 install_embedding_model.sh
+
+Simple installation of embedding models for RAG (Retrieval Augmented Generation) applications.
+
 ## 🚀 Features
 
-- **Interactive Model Selection**: Select specific models from a numbered list
-- **Bulk Removal Option**: Remove all installed models at once with a single command
-- **Confirmation Prompts**: Prevents accidental removals with confirmation steps
-- **User-Friendly Interface**: Simple numbered menu for easy navigation
+- **Model Management**: Remove specific or all installed models
+- **Easy Customization**: Create custom models with predefined or custom personalities
+- **Embedding Support**: Install specialized embedding models for RAG applications
+- **User-Friendly Interface**: Interactive CLI with clear prompts and colorful output
 
 ## 📋 Requirements
 
@@ -50,34 +58,37 @@ This script helps you manage your installed Ollama models by providing an easy w
 - Enter **'a'** to remove all installed models at once
 - Enter **'q'** to quit without removing any models
 
-#### Example Walkthrough:
+### Create Custom Model Script
 
-1. When you run the script, it will list all your installed models:
-   ```
-   Fetching available Ollama models...
-   Available models:
-   1. mistral-small3.1:latest
-   2. qwen3:latest
-   3. llama3.1:8b
-   4. granite3.1-dense:8b
-   5. llama2:latest
-   6. llama3.1:latest
-   7. deepseek-r1:8b
-   8. hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF:Q8_0
-   ```
+This script helps you create customized Ollama models with specific personalities or roles.
 
-2. You'll then be prompted to make a selection:
-   ```
-   Enter the number of the model to remove, 'a' to remove all models, or 'q' to quit:
-   ```
+```bash
+./create_custom_model.sh
+```
 
-3. After entering your choice, you'll be asked to confirm:
-   ```
-   You selected: llama3.1:8b
-   Are you sure you want to remove this model? (y/n)
-   ```
+#### Features:
 
-4. The script will then remove the selected model or exit based on your confirmation.
+- Select any installed model as your base
+- Choose from predefined assistant types:
+  - General Assistant
+  - Coding Assistant
+  - Writing Assistant
+- Define your own custom personality and role
+- Automatic creation of the model with your specifications
+
+### Install Embedding Model Script
+
+This script simplifies the installation of embedding models for RAG applications.
+
+```bash
+./install_embedding_model.sh
+```
+
+#### Features:
+
+- Curated list of popular embedding models
+- Shows example code for using the models
+- Provides examples for Python (LlamaIndex) and JavaScript (LangChain)
 
 ## 🤝 Contributing
 
