@@ -28,13 +28,84 @@ if ! command -v jq &> /dev/null; then
   fi
 fi
 
+# Check if any embedding models are available
+check_embedding_models() {
+  models=$(ollama list | grep -i embed)
+  if [ -z "$models" ]; then
+    echo -e "${YELLOW}No embedding models found.${NC}"
+    echo -e "${BLUE}Embedding models are required for text vectorization and similarity searches.${NC}"
+    echo -e "${YELLOW}Would you like to pull a recommended embedding model? (y/n)${NC}"
+    read pull_model
+
+    if [[ "$pull_model" == "y" ]]; then
+      echo -e "${BLUE}Recommended embedding models:${NC}"
+      echo "1. nomic-embed-text (Recommended for general purpose)"
+      echo "2. all-minilm (Lightweight embedding model)"
+      echo "3. e5-small-v2 (Good balance of performance and size)"
+      echo "4. bge-small-en-v1.5 (Optimized for English text)"
+      echo "5. gte-base (General Text Embeddings model)"
+      echo "6. Other (custom model name)"
+      echo ""
+      echo -e "${YELLOW}Enter the number of the embedding model to install:${NC}"
+      read model_choice
+
+      case $model_choice in
+        1) model_name="nomic-embed-text" ;;
+        2) model_name="all-minilm" ;;
+        3) model_name="e5-small-v2" ;;
+        4) model_name="bge-small-en-v1.5" ;;
+        5) model_name="gte-base" ;;
+        6) 
+          echo -e "${YELLOW}Enter the name of the embedding model:${NC}"
+          read model_name
+          ;;
+        *)
+          echo -e "${RED}Invalid selection.${NC}"
+          echo -e "${BLUE}Visit ${GREEN}https://ollama.ai/library${BLUE} to browse available models.${NC}"
+          return 1
+          ;;
+      esac
+
+      echo -e "${BLUE}Pulling model ${GREEN}$model_name${BLUE}...${NC}"
+      echo -e "${YELLOW}This may take a while depending on your internet connection...${NC}"
+      ollama pull $model_name
+
+      if [ $? -eq 0 ]; then
+        echo -e "${GREEN}Embedding model installed successfully!${NC}"
+        echo -e "${YELLOW}Press any key to continue...${NC}"
+        read -n 1
+        return 0
+      else
+        echo -e "${RED}Failed to pull embedding model.${NC}"
+        echo -e "${BLUE}Visit ${GREEN}https://ollama.ai/library${BLUE} to browse available models.${NC}"
+        return 1
+      fi
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
 clear
 echo -e "${BOLD}==============================================${NC}"
 echo -e "${BOLD}${GREEN}       Advanced Embedding Tools       ${NC}"
 echo -e "${BOLD}==============================================${NC}"
 echo ""
 
+# Check for embedding models at startup
+check_embedding_models
+if [ $? -ne 0 ]; then
+  echo -e "${RED}No embedding models available. Exiting.${NC}"
+  exit 1
+fi
+
 show_main_menu() {
+  clear
+  echo -e "${BOLD}==============================================${NC}"
+  echo -e "${BOLD}${GREEN}       Advanced Embedding Tools       ${NC}"
+  echo -e "${BOLD}==============================================${NC}"
+  echo ""
   echo -e "${YELLOW}Please select an option:${NC}"
   echo "1. Install embedding model"
   echo "2. Generate embeddings for text"
@@ -53,6 +124,8 @@ show_main_menu() {
     5) exit 0 ;;
     *) 
       echo -e "${RED}Invalid choice.${NC}"
+      echo -e "${YELLOW}Press any key to continue...${NC}"
+      read -n 1
       show_main_menu
       ;;
   esac
@@ -88,7 +161,9 @@ install_embedding_model() {
       ;;
     *)
       echo -e "${RED}Invalid choice.${NC}"
-      install_embedding_model
+      echo -e "${YELLOW}Press any key to return to the main menu${NC}"
+      read -n 1
+      show_main_menu
       return
       ;;
   esac

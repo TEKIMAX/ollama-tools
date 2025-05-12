@@ -23,24 +23,76 @@ echo ""
 
 # List available base models
 echo -e "${BLUE}Available base models:${NC}"
-ollama list | tail -n +2 | awk '{print NR ". " $1}'
+models=$(ollama list | tail -n +2 | awk '{print $1}')
 
-if [ $? -ne 0 ]; then
-  echo -e "${RED}Failed to list models. Make sure Ollama is running.${NC}"
-  exit 1
+if [ -z "$models" ]; then
+  echo -e "${RED}No models found. You need at least one base model to create a custom model.${NC}"
+  echo -e "${YELLOW}Would you like to pull a recommended model? (y/n)${NC}"
+  read pull_model
+
+  if [[ "$pull_model" == "y" ]]; then
+    echo -e "${BLUE}Recommended base models:${NC}"
+    echo "1. gemma3:1b      [vision, smaller size ~1GB]"
+    echo "2. mistral-small3.1  [vision, tools, 24GB]"
+    echo "3. llama4         [vision, tools, 67GB]"
+    echo "4. Other (custom model name)"
+    echo ""
+    echo -e "${YELLOW}Enter the number of the model to pull:${NC}"
+    read model_choice
+
+    case $model_choice in
+      1)
+        model_name="gemma3:1b"
+        ;;
+      2)
+        model_name="mistral-small3.1"
+        ;;
+      3)
+        model_name="llama4"
+        ;;
+      4)
+        echo -e "${YELLOW}Enter the model name to pull:${NC}"
+        read model_name
+        ;;
+      *)
+        echo -e "${RED}Invalid selection.${NC}"
+        echo -e "${BLUE}Visit ${GREEN}https://ollama.ai/library${BLUE} to browse available models.${NC}"
+        exit 1
+        ;;
+    esac
+
+    echo -e "${BLUE}Pulling model ${GREEN}$model_name${BLUE}...${NC}"
+    echo -e "${YELLOW}This may take a while depending on your internet connection and the model size.${NC}"
+    ollama pull $model_name
+
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}Model pulled successfully!${NC}"
+      # Get updated model list
+      models=$(ollama list | tail -n +2 | awk '{print $1}')
+    else
+      echo -e "${RED}Failed to pull model.${NC}"
+      echo -e "${BLUE}Visit ${GREEN}https://ollama.ai/library${BLUE} to browse available models.${NC}"
+      exit 1
+    fi
+  else
+    echo -e "${BLUE}Visit ${GREEN}https://ollama.ai/library${BLUE} to browse available models.${NC}"
+    exit 0
+  fi
 fi
+
+# Display the available models with numbers
+model_array=()
+count=1
+while IFS= read -r model; do
+  echo "$count. $model"
+  model_array+=("$model")
+  count=$((count+1))
+done <<< "$models"
 
 # Get base model selection
 echo ""
 echo -e "${YELLOW}Select a base model number from the list above:${NC}"
 read base_model_num
-
-# Get models again for selection
-models=$(ollama list | tail -n +2 | awk '{print $1}')
-model_array=()
-while IFS= read -r model; do
-  model_array+=("$model")
-done <<< "$models"
 
 # Validate model number
 if ! [[ "$base_model_num" =~ ^[0-9]+$ ]] || [ "$base_model_num" -lt 1 ] || [ "$base_model_num" -gt "${#model_array[@]}" ]; then
