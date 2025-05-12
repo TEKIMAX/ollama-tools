@@ -6,29 +6,52 @@ A collection of utility scripts for managing [Ollama](https://ollama.ai/) models
 
 ## 📦 Tools Included
 
-### 🗑️ remove_ollama_models.sh
+### Basic Tools
+
+#### 🗑️ remove_ollama_models.sh
 
 An interactive script for managing and removing your installed Ollama models.
 
-### 🤖 create_custom_model.sh
+#### 🤖 create_custom_model.sh
 
 Easily create customized assistant models with specific personalities and capabilities.
 
-### 📊 install_embedding_model.sh
+#### 📊 install_embedding_model.sh
 
 Simple installation of embedding models for RAG (Retrieval Augmented Generation) applications.
 
+### Advanced Tools
+
+#### 🚀 create_custom_model_advanced.sh
+
+Advanced model creation with support for custom templates and model parameters.
+
+#### 🧠 advanced_embedding_tools.sh
+
+Full-featured embedding suite with batch processing, similarity comparison, and more.
+
 ## 🚀 Features
+
+### Basic Features
 
 - **Model Management**: Remove specific or all installed models
 - **Easy Customization**: Create custom models with predefined or custom personalities
 - **Embedding Support**: Install specialized embedding models for RAG applications
 - **User-Friendly Interface**: Interactive CLI with clear prompts and colorful output
 
+### Advanced Features
+
+- **Custom Model Templates**: Define exactly how your model formats responses
+- **Model Parameter Tuning**: Fine-tune temperature, top_k, top_p, and context window
+- **Embedding Vector Visualization**: View and export generated embedding vectors
+- **Text Similarity Analysis**: Compare texts using cosine similarity metrics
+- **Batch Processing**: Process multiple texts at once for embedding generation
+
 ## 📋 Requirements
 
 - Ollama installed and properly configured ([Ollama installation guide](https://ollama.ai/download))
 - Bash shell (included by default on macOS and most Linux distributions)
+- (For advanced embedding tools) jq for JSON processing
 
 ## 🔧 Installation
 
@@ -42,9 +65,23 @@ Simple installation of embedding models for RAG (Retrieval Augmented Generation)
    chmod +x ollama-tools/*.sh
    ```
 
+3. For advanced embedding tools, you'll need `jq` (the script will attempt to install it if missing):
+   ```bash
+   # macOS
+   brew install jq
+   
+   # Ubuntu/Debian
+   sudo apt-get install jq
+   
+   # CentOS/RHEL
+   sudo yum install jq
+   ```
+
 ## 🔍 Usage
 
-### Remove Ollama Models Script
+### Basic Tools
+
+#### Remove Ollama Models Script
 
 This script helps you manage your installed Ollama models by providing an easy way to remove them.
 
@@ -52,13 +89,13 @@ This script helps you manage your installed Ollama models by providing an easy w
 ./remove_ollama_models.sh
 ```
 
-#### Options:
+##### Options:
 
 - Enter a **number** to select and remove a specific model
 - Enter **'a'** to remove all installed models at once
 - Enter **'q'** to quit without removing any models
 
-### Create Custom Model Script
+#### Create Custom Model Script
 
 This script helps you create customized Ollama models with specific personalities or roles.
 
@@ -66,7 +103,7 @@ This script helps you create customized Ollama models with specific personalitie
 ./create_custom_model.sh
 ```
 
-#### Features:
+##### Features:
 
 - Select any installed model as your base
 - Choose from predefined assistant types:
@@ -76,7 +113,7 @@ This script helps you create customized Ollama models with specific personalitie
 - Define your own custom personality and role
 - Automatic creation of the model with your specifications
 
-### Install Embedding Model Script
+#### Install Embedding Model Script
 
 This script simplifies the installation of embedding models for RAG applications.
 
@@ -84,11 +121,57 @@ This script simplifies the installation of embedding models for RAG applications
 ./install_embedding_model.sh
 ```
 
-#### Features:
+##### Features:
 
 - Curated list of popular embedding models
 - Shows example code for using the models
 - Provides examples for Python (LlamaIndex) and JavaScript (LangChain)
+
+### Advanced Tools
+
+#### Advanced Custom Model Creator
+
+Create models with fine-grained control over model behavior and response format.
+
+```bash
+./create_custom_model_advanced.sh
+```
+
+##### Advanced Features:
+
+- All basic features from the simple model creator
+- Custom prompt templates with placeholders
+- Model parameter tuning:
+  - Temperature control
+  - Top-P and Top-K sampling settings
+  - Context window size adjustment
+- Preview of the full Modelfile before creation
+
+#### Advanced Embedding Tools
+
+Full-featured suite for working with embeddings.
+
+```bash
+./advanced_embedding_tools.sh
+```
+
+##### Embedding Features:
+
+- Interactive menu-driven interface
+- Install embedding models
+- Generate embeddings for text with vector visualization
+- Compare similarity between texts with interpretation
+- Batch process multiple texts for embedding generation
+- Save embeddings to JSON files for later use
+
+## API Compatibility
+
+These tools use the [Ollama API](https://github.com/ollama/ollama/blob/main/docs/api.md) under the hood and support most API features:
+
+- Model creation with custom Modelfiles
+- Template customization with placeholders
+- Parameter tuning for model behavior
+- Embedding generation and processing
 
 ## 🤝 Contributing
 
